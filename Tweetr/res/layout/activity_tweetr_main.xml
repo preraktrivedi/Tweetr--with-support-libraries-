@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_drawable"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TweetrMainActivity" >
+
+    <eu.erikw.PullToRefreshListView
+        android:id="@+id/lvTweets"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="4dp"
+        android:background="#e2e2e2"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:dividerHeight="3dp"
+        android:fadingEdge="vertical"
+        android:padding="3dp"
+        android:scrollbarStyle="outsideOverlay" />
+
+</RelativeLayout>

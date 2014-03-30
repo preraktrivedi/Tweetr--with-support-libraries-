@@ -1,0 +1,22 @@
+package com.preraktrivedi.apps.tweetr.datamodel;
+
+public class TweetrAppData {
+
+	private static TweetrAppData sInstance;
+	private User authenticatedTwitterUser;
+
+	public static synchronized TweetrAppData getInstance() {
+		if (null == sInstance) {
+			sInstance = new TweetrAppData();
+		}
+		return sInstance;
+	}
+
+	public User getAuthenticatedTwitterUser() {
+		return authenticatedTwitterUser;
+	}
+
+	public void setAuthenticatedTwitterUser(User authenticatedTwitterUser) {
+		this.authenticatedTwitterUser = authenticatedTwitterUser;
+	}
+}
