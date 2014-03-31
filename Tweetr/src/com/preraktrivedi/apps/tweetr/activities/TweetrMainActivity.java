@@ -6,14 +6,17 @@ import org.json.JSONArray;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
@@ -37,6 +40,7 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 	private TweetrAdapter tweetrAdapter;
 	private PullToRefreshListView lvTweets;
 	private Context mContext;
+	private RelativeLayout rlTweetContainer;
 	private SwingRightInAnimationAdapter swingRightInAnimationAdapter;
 	private TweetrAppData mAppData = TweetrAppData.getInstance();
 
@@ -69,6 +73,7 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 		setContentView(R.layout.activity_tweetr_main);
 		styleActionBar();
 		lvTweets = (PullToRefreshListView) findViewById(R.id.lvTweets);
+		rlTweetContainer = (RelativeLayout) findViewById(R.id.rl_tweet_container);
 		initAdapter();
 		setupListeners();
 	}
@@ -103,6 +108,13 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 	}
 
 	private void setupListeners() {
+
+		rlTweetContainer.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				composeNewTweet();
+			}
+		});
 		lvTweets.setOnScrollListener(new EndlessScrollListener() {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
@@ -137,10 +149,27 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.mi_compose_tweet:
+			composeNewTweet();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void composeNewTweet() {
+		Intent i = new Intent(this, ComposeTweetActivity.class);
+		startActivity(i);
+	}
+
+	@Override
 	public void onDismiss(AbsListView arg0, int[] reverseSortedPositions) {
 		for (int position : reverseSortedPositions) {
-			Toast.makeText(mContext, "REMOVE TWEET", Toast.LENGTH_SHORT).show();
+			tweetrAdapter.remove(tweetrAdapter.getItem(position));
 		}
+		tweetrAdapter.notifyDataSetChanged();
+		swingRightInAnimationAdapter.notifyDataSetChanged();
 	}
 
 	public void fetchTimelineAsync(final long maxId, final long sinceId) {

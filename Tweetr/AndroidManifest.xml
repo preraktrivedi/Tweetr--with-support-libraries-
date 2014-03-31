@@ -30,6 +30,10 @@
             android:name="com.preraktrivedi.apps.tweetr.activities.TweetrMainActivity"
             android:label="@string/app_name" >
         </activity>
+         <activity
+            android:name="com.preraktrivedi.apps.tweetr.activities.ComposeTweetActivity"
+            android:label="@string/app_name" >
+        </activity>
         <activity
             android:name="com.preraktrivedi.apps.tweetr.activities.LoginActivity"
             android:label="@string/app_name" >

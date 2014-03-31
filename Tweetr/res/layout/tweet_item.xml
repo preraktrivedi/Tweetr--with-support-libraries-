@@ -27,26 +27,26 @@
         android:layout_marginRight="10dp"
         android:layout_toRightOf="@id/ivProfile" >
 
-        <TextView
-            android:id="@+id/tvTimeStamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="2dp"
-            android:text="5 minutes ago"
-            android:textColor="#666666"
-            android:textSize="10sp" />
-        
-        <TextView
+          <TextView
             android:id="@+id/tvName"
-            android:layout_width="wrap_content"
+            android:layout_width="185dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:ellipsize="end"
             android:singleLine="true"
-            android:layout_alignBaseline="@id/tvTimeStamp"
             android:text="Sample Twitter Username @usernamesample" />
+          
+        <TextView
+            android:id="@+id/tvTimeStamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@id/tvName"
+            android:layout_marginLeft="2dp"
+            android:text="5 minutes ago"
+            android:textColor="#666666"
+            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/tvBody"

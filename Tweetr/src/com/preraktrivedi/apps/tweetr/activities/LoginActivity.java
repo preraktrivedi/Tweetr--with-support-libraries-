@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -25,25 +26,37 @@ import com.preraktrivedi.apps.tweetr.utils.LayoutUtils;
 public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
-	private final int TIME_DELAY_FOR_AUTHENTICATION = 4500;
+	private final int TIME_DELAY_FOR_AUTHENTICATION = 3500;
 	private TweetrAppData mAppData;
 	private Context mContext;
 	private Button btLogin;
-	private TwitterClient client;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		mAppData = TweetrAppData.getInstance();
-		client = getClient();
 		initUi();
 
-//		new Handler().postDelayed(new Runnable(){
-//			@Override
-//			public void run() {
-//			}
-//		}, TIME_DELAY_FOR_AUTHENTICATION);
+		new Handler().postDelayed(new Runnable(){
+			@Override
+			public void run() {
+			}
+		}, TIME_DELAY_FOR_AUTHENTICATION);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, ">onResume - ");
+		if (getClient() != null) {
+			Log.d(TAG, ">isAuthenticated - " + getClient().isAuthenticated());
+			if(getClient().isAuthenticated()) {
+				btLogin.setVisibility(View.GONE);
+			} else {
+				btLogin.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 
 	private void initUi() {
@@ -51,11 +64,6 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#E0EAEF")));
 		getActionBar().setTitle(Html.fromHtml("<font color=\"#2E82FF\">" + getString(R.string.app_name) + "</font>"));
 		btLogin = (Button) findViewById(R.id.bt_login);
-//		if(client.checkAccessToken() != null) {
-//			btLogin.setVisibility(View.GONE);
-//		} else {
-//			btLogin.setVisibility(View.VISIBLE);
-//		}
 	}
 
 	@Override

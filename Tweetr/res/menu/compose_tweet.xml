@@ -1,11 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
+  
     <item
-        android:id="@+id/mi_compose_tweet"
+        android:id="@+id/send_tweet"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:icon="@drawable/ic_compose_tweet"
-        android:title="@string/compose"/>
-
-
+        android:title="@string/send_tweet"
+        android:onClick="onClickTweet"/>
+    
 </menu>

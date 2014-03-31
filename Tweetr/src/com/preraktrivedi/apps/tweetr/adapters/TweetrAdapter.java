@@ -58,10 +58,7 @@ public class TweetrAdapter extends ArrayAdapter<Tweet> {
 
 	private void configureView(Tweet tweet, ViewHolder viewHolder) {
 		ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), viewHolder.profile);
-		String formattedName = "<b>" + tweet.getUser().getName() + "</b>"
-				+ "<small> <font color = '#777777'>@"
-				+ tweet.getUser().getScreenName() + "</font></small>";
-		viewHolder.name.setText(Html.fromHtml(formattedName));
+		viewHolder.name.setText(Html.fromHtml(LayoutUtils.getFormattedUsername(tweet.getUser())));
 		viewHolder.body.setText(Html.fromHtml(tweet.getBody()));
 		viewHolder.tvTimeStamp.setText(LayoutUtils.getFormattedTimestamp(mContext, tweet.getTimestamp()));
 		

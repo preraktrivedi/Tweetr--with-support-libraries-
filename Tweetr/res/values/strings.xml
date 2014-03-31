@@ -11,13 +11,14 @@
     <string name="iv_cd_userprofile">User\'s profile photo</string>
     <string name="title_activity_tweet_time_line">Twitter Time Line</string>
     <string name="compose">Compose</string>
+    <string name="whats_happening">What\'s happening?</string>
     <string name="refresh">Refresh</string>
     <string name="title_activity_compose_tweet">Compose Tweet</string>
 
     <!-- Compose Tweet -->
     <string name="compose_tweet">Compose Tweet</string>
     <string name="cancel_compose_tweet">Cancel</string>
-    <string name="send_tweet">Send</string>
+    <string name="send_tweet">Tweet</string>
     <string name="edit_text_hint_default">Compose a New Tweet</string>
     <string name="tab_home">Home</string>
     <string name="tab_mention">Mentions</string>
