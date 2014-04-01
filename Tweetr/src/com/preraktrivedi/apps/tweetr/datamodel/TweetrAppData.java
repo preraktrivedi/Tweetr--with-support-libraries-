@@ -4,6 +4,7 @@ public class TweetrAppData {
 
 	private static TweetrAppData sInstance;
 	private User authenticatedTwitterUser;
+	private Tweet currentDetailedTweet;
 
 	public static synchronized TweetrAppData getInstance() {
 		if (null == sInstance) {
@@ -18,5 +19,13 @@ public class TweetrAppData {
 
 	public void setAuthenticatedTwitterUser(User authenticatedTwitterUser) {
 		this.authenticatedTwitterUser = authenticatedTwitterUser;
+	}
+
+	public Tweet getCurrentDetailedTweet() {
+		return currentDetailedTweet;
+	}
+
+	public void setCurrentDetailedTweet(Tweet currentDetailedTweet) {
+		this.currentDetailedTweet = currentDetailedTweet;
 	}
 }

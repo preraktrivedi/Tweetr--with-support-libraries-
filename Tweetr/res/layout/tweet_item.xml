@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/card_background_white"
     android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
     android:padding="16dp" >
 
     <ImageView
@@ -29,7 +30,7 @@
 
           <TextView
             android:id="@+id/tvName"
-            android:layout_width="185dp"
+            android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
@@ -44,7 +45,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignBaseline="@id/tvName"
             android:layout_marginLeft="2dp"
-            android:text="5 minutes ago"
+            android:text="7S"
             android:textColor="#666666"
             android:textSize="10sp" />
 
@@ -53,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvName"
+            android:autoLink="web"
             android:layout_marginTop="10dp"
             android:text="This is a sample tweet bro" />
     </RelativeLayout>

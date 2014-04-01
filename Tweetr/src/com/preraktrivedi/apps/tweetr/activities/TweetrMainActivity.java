@@ -15,8 +15,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
@@ -49,26 +53,10 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		intitUi();
-
-		//		TweetrApp.getRestClient().getHomeTimeLineTweets(-1, -1, new JsonHttpResponseHandler() {
-		//			@Override
-		//			public void onSuccess(JSONArray jsonTweets) {
-		//				Log.d(TAG, ">onSuccess TimelineTweets " + jsonTweets.toString());
-		//				tweets = Tweet.fromJson(jsonTweets);
-		//				tweetrAdapter = new TweetrAdapter(getBaseContext(), tweets);
-		//				SwingRightInAnimationAdapter  swingRightInAnimationAdapter = new SwingRightInAnimationAdapter (new SwipeDismissAdapter(tweetrAdapter, (OnDismissCallback) mContext));
-		//				swingRightInAnimationAdapter.setInitialDelayMillis(700);
-		//				swingRightInAnimationAdapter.setAbsListView(lvTweets);
-		//				swingRightInAnimationAdapter.setAnimationDurationMillis(400);
-		//				lvTweets.setAdapter(swingRightInAnimationAdapter);
-		//			}
-		//			public void onFailure(Throwable e) {
-		//				Log.d(TAG, ">onFailure TimelineTweets: " + e.toString());
-		//			}
-		//		});
 	}
 
 	private void intitUi() {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		LayoutUtils.showToast(mContext, "Signed in with user - " + mAppData.getAuthenticatedTwitterUser().getScreenName());
 		setContentView(R.layout.activity_tweetr_main);
 		styleActionBar();
@@ -86,16 +74,29 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 		swingRightInAnimationAdapter.setAbsListView(lvTweets);
 		swingRightInAnimationAdapter.setAnimationDurationMillis(400);
 		lvTweets.setAdapter(swingRightInAnimationAdapter);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG, "> onResume menuloader");
+		loadInitialTweets();
+	}
+
+	private void loadInitialTweets() {
+		showLoader(true);
 		TweetrApp.getRestClient().getHomeTimeLineTweets(-1, -1,  new TweetrJsonHttpResponseHandler(mContext, TAG) {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				Log.d(TAG, ">onSuccess TimelineTweets " + jsonTweets.toString());
+				showLoader(false);
 				tweets = Tweet.fromJson(jsonTweets);
 				tweetrAdapter.addAll(tweets);
 				tweetrAdapter.notifyDataSetChanged();
 				swingRightInAnimationAdapter.notifyDataSetChanged();
 			}
 			public void onFailure(Throwable e) {
+				showLoader(false);
 				Log.d(TAG, ">onFailure TimelineTweets: " + e.toString());
 			}
 		});
@@ -115,47 +116,61 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 				composeNewTweet();
 			}
 		});
+
 		lvTweets.setOnScrollListener(new EndlessScrollListener() {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
-				// Triggered only when new data needs to be appended to the list
-				// Add whatever code is needed to append new items to your
-				// AdapterView
 				if (tweetrAdapter.getCount() > 0) {
 					fetchTimelineAsync(tweetrAdapter.getItem(tweetrAdapter.getCount() - 1).getId() - 1, -1);
 				}
 			}
 		});
 
-		// Set a listener to be invoked when the list should be refreshed.
 		lvTweets.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				// Your code to refresh the list contents
-				// Make sure you call listView.onRefreshComplete()
-				// once the loading is done. This can be done from here or any
-				// place such as when the network request has completed successfully.
 				fetchTimelineAsync(-1, tweetrAdapter.getItem(0).getId() + 1);
 				lvTweets.onRefreshComplete();
 			}
 		});
+
+
+
+		lvTweets.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				mAppData.setCurrentDetailedTweet(tweetrAdapter.getItem(position));
+				Intent i = new Intent(mContext, DetailedTweetActivity.class);
+				startActivity(i);
+				Toast.makeText(getBaseContext(), tweetrAdapter.getItem(position).getBody(), Toast.LENGTH_SHORT).show();
+			}
+		});
+
+
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+		Log.d(TAG, "> onCreateOptionsMenu  menuloader");
 		getMenuInflater().inflate(R.menu.tweetr_main, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.d(TAG, "> onOptionsItemSelected  menuloader");
 		switch (item.getItemId()) {
 		case R.id.mi_compose_tweet:
 			composeNewTweet();
 			return true;
+		default:
+			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void showLoader(boolean show) {
+		setProgressBarIndeterminateVisibility(show);
 	}
 
 	private void composeNewTweet() {
@@ -174,9 +189,11 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 
 	public void fetchTimelineAsync(final long maxId, final long sinceId) {
 		Log.d(TAG, ">fetchTimelineAsync");
+		showLoader(true);
 		TweetrApp.getRestClient().getHomeTimeLineTweets(maxId, sinceId, new TweetrJsonHttpResponseHandler(mContext, TAG) {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
+				showLoader(false);
 				Log.d(TAG, ">onSuccess TimelineTweets " + jsonTweets.toString());
 				if(jsonTweets.length() > 0) {
 					tweets = Tweet.fromJson(jsonTweets);

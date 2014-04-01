@@ -51,6 +51,7 @@ public class ComposeTweetActivity extends Activity {
 		getMenuInflater().inflate(R.menu.compose_tweet, menu);
 		MenuItem item = menu.findItem(R.id.send_tweet);
 		item.setTitle(Html.fromHtml(LayoutUtils.getComposeTitle("Tweet")));
+		invalidateOptionsMenu();
 		return true;
 	}
 
