@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,28 +13,27 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.preraktrivedi.apps.tweetr.R;
 import com.preraktrivedi.apps.tweetr.application.TweetrApp;
 import com.preraktrivedi.apps.tweetr.datamodel.TweetrAppData;
 import com.preraktrivedi.apps.tweetr.datamodel.User;
+import com.preraktrivedi.apps.tweetr.restclient.TweetrJsonHttpResponseHandler;
 import com.preraktrivedi.apps.tweetr.utils.LayoutUtils;
 
 public class ComposeTweetActivity extends Activity {
 
+	private static final String TAG = ComposeTweetActivity.class.getSimpleName();
 	private EditText etTweetMessage;
 	private TextView tvScreenName, tvUsername, tvTweetCount;
 	private ImageView ivProfileImage;
-	private ProgressBar pbCompose;
 	private Context mContext;
 	private TweetrAppData mAppData;
-	private static final int MAX_TWEET_CHAR_COUNT = 140;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +64,9 @@ public class ComposeTweetActivity extends Activity {
 	}
 
 	private void initializeView() {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		styleActionBar();
 		setContentView(R.layout.activity_compose_tweet);
-		pbCompose = (ProgressBar) findViewById(R.id.pbCompose);
 		etTweetMessage = (EditText) findViewById(R.id.etTweetMessage);
 		tvScreenName = (TextView) findViewById(R.id.tvScreenNameCompose);
 		tvUsername = (TextView) findViewById(R.id.tvUserNameCompose);
@@ -77,6 +75,7 @@ public class ComposeTweetActivity extends Activity {
 		User user =  mAppData.getAuthenticatedTwitterUser();
 		tvScreenName.setText("@" + user.getScreenName());
 		tvUsername.setText(user.getName());
+		etTweetMessage.requestFocus();
 		ImageLoader.getInstance().displayImage(user.getProfileImageUrl(), ivProfileImage);
 		setupListeners();
 	}
@@ -104,23 +103,10 @@ public class ComposeTweetActivity extends Activity {
 			public void afterTextChanged(Editable s) {
 				if (s!=null) {
 					String tweetMsg = s.toString();
-					validateTweetMsg(tweetMsg);
+					LayoutUtils.validateTweetMsg(tweetMsg, tvTweetCount);
 				}
 			}
 		});
-	}
-
-	private void validateTweetMsg(String tweetMsg) {
-		int tweetCountLeft = MAX_TWEET_CHAR_COUNT - tweetMsg.length();
-		tvTweetCount.setText("" + tweetCountLeft);
-		
-		if(tweetCountLeft < 10) {
-			tvTweetCount.setTextColor(Color.parseColor("#99E53D38"));
-		} else if(tweetCountLeft < 70) {
-			tvTweetCount.setTextColor(Color.parseColor("#99E88E23"));
-		} else {
-			tvTweetCount.setTextColor(Color.parseColor("#9900AB17"));
-		}
 	}
 
 	public void onClickTweet(MenuItem mi) {
@@ -130,26 +116,18 @@ public class ComposeTweetActivity extends Activity {
 			return;
 		} 
 		
-		showProgressBar();
-		TweetrApp.getRestClient().postTweet(tweetMsg, new JsonHttpResponseHandler() {
+		showLoader(true);
+		TweetrApp.getRestClient().postTweet(tweetMsg, "", new TweetrJsonHttpResponseHandler(mContext, TAG) {
 			@Override
 			public void onSuccess(JSONObject jsonTweet) {
-				Intent i = new Intent();
-				i.putExtra("jsonTweet", jsonTweet.toString());
-				setResult(RESULT_OK, i);
-				disableProgressBar();
+				showLoader(false);
 				finish();
-
 			}
 		});
 	}
 
-	public void showProgressBar(){
-		pbCompose.setVisibility(ProgressBar.VISIBLE);
-	}
-
-	public void disableProgressBar(){
-		pbCompose.setVisibility(ProgressBar.INVISIBLE);
+	private void showLoader(boolean show) {
+		setProgressBarIndeterminateVisibility(show);
 	}
 
 }
