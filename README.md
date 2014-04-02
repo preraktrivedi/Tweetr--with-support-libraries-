@@ -8,6 +8,7 @@ Tweetr is a simple twitter client where in you authenticate with your Twitter ac
 * Simple login mechanism using the OAuth flow.
 * Once authenticated, land on your user timeline and view list of 25 most recent tweets. 
 * The tweets are loaded with an intuitive animation which makes the app more engrossing.
+* Swipe left or right on a tweet to hide it temporarily
 * The tweets in timeline also contain embedded media images along with clickable links to go to the website.
 * More tweets are automatically loaded once you reach the end of page (endless scrolling).
 * Compose a new tweet by clicking on the compose button in Menu bar or by clicking on "What's Happening" in the timeline.
@@ -25,17 +26,25 @@ Tweetr is a simple twitter client where in you authenticate with your Twitter ac
 
 ![Screenshots](/sampleapk/2-Authenticate.png "Screenshot authenticate")
 
-3) Tweetr Timeline screenshots:
+3a) Tweetr Timeline screenshots:
 
 ![Screenshots](/sampleapk/3a-TweetTimelineImage.png "Screenshot Timeline")
 
+3b) Tweetr Timeline screenshots:
 
+![Screenshots](/sampleapk/3b-TweetTimeline.png "Screenshot Timeline")
+
+3c) Tweetr Timeline - Swipe left or right on a tweet to hide it temporarily:
+
+![Screenshots](/sampleapk/3c - SwipeToHide.png "Screenshot Swipe to hide")
+
+3d) Pull down list to refresh tweets
 
 ![Screenshots](/sampleapk/3b-TweetTimeline.png "Screenshot Timeline")
 
 4) Detailed tweet:
 
-![Screenshots](/sampleapk/4-DetailTweet.png "Screenshot Detail Tweet")
+![Screenshots](/sampleapk/3d-PullToRefresh.png "Screenshot Pull to refresh")
 
 5) Reply to author of the tweet:
 
