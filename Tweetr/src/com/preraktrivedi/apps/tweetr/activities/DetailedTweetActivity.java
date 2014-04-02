@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,7 +37,7 @@ public class DetailedTweetActivity extends Activity {
 	private Tweet currentDetailedTweet;
 	private EditText etTweetBox;
 	private TextView tvScreenName, tvUsername, tvTweetBody, tvFavouritesCount, tvRetweetsCounts, tvTweetCharCount, tvSendTweet;
-	private ImageView ivProfileImage;
+	private ImageView ivProfileImage, ivDetailImage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +64,16 @@ public class DetailedTweetActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			mAppData.setCurrentDetailedTweet(null);
-			this.finish();
+			goBackToTimeline();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void goBackToTimeline() {
+		mAppData.setCurrentDetailedTweet(null);
+		showLoader(false);
+		finish();
 	}
 
 	private void initializeView() {
@@ -79,6 +83,11 @@ public class DetailedTweetActivity extends Activity {
 		User user = currentDetailedTweet.getUser();
 		ivProfileImage = (ImageView) findViewById(R.id.ivProfileCompose);
 		ImageLoader.getInstance().displayImage(user.getProfileImageUrl(), ivProfileImage);
+		ivDetailImage = (ImageView) findViewById(R.id.ivDetailImage);
+		if (!TextUtils.isEmpty(currentDetailedTweet.getMediaUrl())) {
+			ImageLoader.getInstance().displayImage(currentDetailedTweet.getMediaUrl(), ivDetailImage);
+			ivDetailImage.setVisibility(View.VISIBLE);
+		}
 		tvScreenName = (TextView) findViewById(R.id.tvScreenNameCompose);
 		tvUsername = (TextView) findViewById(R.id.tvUserNameCompose);
 		tvTweetBody = (TextView) findViewById(R.id.tvTweetBody);
@@ -151,7 +160,7 @@ public class DetailedTweetActivity extends Activity {
 		} 
 		
 		if (!tweetMsg.contains(currentDetailedTweet.getUser().getScreenName())) {
-			LayoutUtils.showToast(mContext, "Replies to this tweet should mention the author!");
+			LayoutUtils.showToast(mContext, "Replies to this tweet should mention the author! - @" + currentDetailedTweet.getUser().getScreenName());
 			return;
 		}
 
@@ -159,8 +168,7 @@ public class DetailedTweetActivity extends Activity {
 		TweetrApp.getRestClient().postTweet(tweetMsg, String.valueOf(currentDetailedTweet.getId()), new TweetrJsonHttpResponseHandler(mContext, TAG) {
 			@Override
 			public void onSuccess(JSONObject jsonTweet) {
-				showLoader(false);
-				finish();
+				goBackToTimeline();
 			}
 		});
 	}

@@ -13,6 +13,7 @@ public class Tweet extends BaseModel {
 	private String timestamp;
 	private int retweetCount;
 	private int favouritesCount;
+	private String mediaUrl;
 
 	public String getBody() {
 		return this.body;
@@ -28,6 +29,14 @@ public class Tweet extends BaseModel {
 
 	public long getId() {
 		return getLong("id");
+	}
+
+	public String getMediaUrl() {
+		return mediaUrl;
+	}
+
+	public void setMediaUrl(String mediaUrl) {
+		this.mediaUrl = mediaUrl;
 	}
 
 	public boolean isFavorited() {
@@ -61,7 +70,11 @@ public class Tweet extends BaseModel {
 			tweet.body = jo.getString("text");
 			tweet.retweetCount = jo.getInt("retweet_count");
 			tweet.favouritesCount = jo.getInt("favorite_count");
-
+			try {
+				tweet.mediaUrl = mediaUrlFromJsonEntity(jo.getJSONObject("entities"));
+			} catch (JSONException e) {
+				tweet.mediaUrl = "";
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -84,5 +97,19 @@ public class Tweet extends BaseModel {
 			}
 		}
 		return tweets;
+	}
+
+	private static String mediaUrlFromJsonEntity(JSONObject entitiesObject) throws JSONException {
+		String mediaUrl = "";
+		if (entitiesObject.has("media") && !entitiesObject.isNull("media")) {
+			JSONArray mediaArray = entitiesObject.getJSONArray("media");
+			if (mediaArray.length() > 0) {
+				JSONObject mediaJsonObj = mediaArray.getJSONObject(0);
+				if (mediaJsonObj.has("media_url") && !mediaJsonObj.isNull("media_url")) {
+					mediaUrl = mediaJsonObj.getString("media_url");
+				}
+			}
+		}
+		return mediaUrl;
 	}
 }

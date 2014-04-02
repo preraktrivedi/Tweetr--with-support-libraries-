@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class TweetrAdapter extends ArrayAdapter<Tweet> {
 	
 	private static class ViewHolder {
 		ImageView profile;
+		ImageView mediaImage;
 		TextView name;
 		TextView body;
 		TextView tvTimeStamp;
@@ -46,6 +48,7 @@ public class TweetrAdapter extends ArrayAdapter<Tweet> {
 			viewHolder.name = (TextView) convertView.findViewById(R.id.tvName);
 			viewHolder.profile = (ImageView) convertView.findViewById(R.id.ivProfile);
 			viewHolder.tvTimeStamp = (TextView) convertView.findViewById(R.id.tvTimeStamp);
+			viewHolder.mediaImage = (ImageView) convertView.findViewById(R.id.ivMediaImageThumb);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -61,31 +64,11 @@ public class TweetrAdapter extends ArrayAdapter<Tweet> {
 		viewHolder.name.setText(Html.fromHtml(LayoutUtils.getFormattedUsername(tweet.getUser())));
 		viewHolder.body.setText(Html.fromHtml(tweet.getBody()));
 		viewHolder.tvTimeStamp.setText(LayoutUtils.getFormattedTimestamp(mContext, tweet.getTimestamp()));
-		
-		
-
-		//		profile.setOnClickListener(new OnClickListener() {
-		//			@Override
-		//			public void onClick(View v) {
-		//				SimpleTwitterApp.getRestClient().getSpecifiedUserProfile(tweet.getUser().getScreenName(),
-		//						new JsonHttpResponseHandler() {
-		//					@Override
-		//					public void onSuccess(JSONObject jo) {
-		//						User authUser = User.fromJson(jo);
-		//						Intent i = new Intent(getContext(), ProfileActivity.class);
-		//						Bundle bundle = new Bundle();
-		//						//Can send serializable object
-		//						bundle.putString("screenName", authUser.getScreenName());
-		//						bundle.putString("userProfileImageUrl", authUser.getProfileImageUrl());
-		//						bundle.putString("name", authUser.getName());
-		//						bundle.putString("tag", authUser.getDescription());
-		//						bundle.putInt("followers", authUser.getFollowersCount());
-		//						bundle.putInt("following", authUser.getFriendsCount());
-		//						i.putExtras(bundle);
-		//						getContext().startActivity(i);
-		//					}
-		//				});
-		//			}
-		//		});
+		viewHolder.mediaImage.setVisibility(View.GONE);
+		if (!TextUtils.isEmpty(tweet.getMediaUrl())) {
+			String mediaUrl = tweet.getMediaUrl() + ":thumb";
+			ImageLoader.getInstance().displayImage(mediaUrl, viewHolder.mediaImage);
+			viewHolder.mediaImage.setVisibility(View.VISIBLE);
+		}
 	}
 }

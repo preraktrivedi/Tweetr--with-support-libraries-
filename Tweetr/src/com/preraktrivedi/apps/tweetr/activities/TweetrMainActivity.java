@@ -20,7 +20,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
@@ -142,7 +141,6 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 				mAppData.setCurrentDetailedTweet(tweetrAdapter.getItem(position));
 				Intent i = new Intent(mContext, DetailedTweetActivity.class);
 				startActivity(i);
-				Toast.makeText(getBaseContext(), tweetrAdapter.getItem(position).getBody(), Toast.LENGTH_SHORT).show();
 			}
 		});
 

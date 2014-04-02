@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/card_background_white"
-    android:orientation="horizontal"
     android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
     android:padding="16dp" >
 
     <ImageView
@@ -23,12 +23,12 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/ivProfile"
         android:layout_marginBottom="15dp"
-        android:layout_marginTop="3dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
         android:layout_toRightOf="@id/ivProfile" >
 
-          <TextView
+        <TextView
             android:id="@+id/tvName"
             android:layout_width="190dp"
             android:layout_height="wrap_content"
@@ -37,13 +37,13 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="Sample Twitter Username @usernamesample" />
-          
+
         <TextView
             android:id="@+id/tvTimeStamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignBaseline="@id/tvName"
+            android:layout_alignParentRight="true"
             android:layout_marginLeft="2dp"
             android:text="7S"
             android:textColor="#666666"
@@ -54,9 +54,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvName"
-            android:autoLink="web"
             android:layout_marginTop="10dp"
+            android:autoLink="web"
             android:text="This is a sample tweet bro" />
+
+        <ImageView
+            android:id="@+id/ivMediaImageThumb"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@id/tvBody"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/iv_cd_userprofile"
+            android:padding="10dp"
+            android:src="@drawable/ic_launcher"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>
