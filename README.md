@@ -40,11 +40,11 @@ Tweetr is a simple twitter client where in you authenticate with your Twitter ac
 
 3d) Pull down list to refresh tweets
 
-![Screenshots](/sampleapk/3b-TweetTimeline.png "Screenshot Timeline")
+![Screenshots](/sampleapk/3d-PullToRefresh.png "Screenshot Pull to refresh ")
 
 4) Detailed tweet:
 
-![Screenshots](/sampleapk/3d-PullToRefresh.png "Screenshot Pull to refresh")
+![Screenshots](/sampleapk/4-DetailTweet.png "Screenshot Detailed Tweet ")
 
 5) Reply to author of the tweet:
 
