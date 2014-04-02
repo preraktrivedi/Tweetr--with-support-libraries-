@@ -79,26 +79,31 @@ public class TweetrMainActivity extends Activity  implements OnDismissCallback {
 	public void onResume() {
 		super.onResume();
 		Log.d(TAG, "> onResume menuloader");
-		loadInitialTweets();
+		loadTweets();
 	}
 
-	private void loadInitialTweets() {
-		showLoader(true);
-		TweetrApp.getRestClient().getHomeTimeLineTweets(-1, -1,  new TweetrJsonHttpResponseHandler(mContext, TAG) {
-			@Override
-			public void onSuccess(JSONArray jsonTweets) {
-				Log.d(TAG, ">onSuccess TimelineTweets " + jsonTweets.toString());
-				showLoader(false);
-				tweets = Tweet.fromJson(jsonTweets);
-				tweetrAdapter.addAll(tweets);
-				tweetrAdapter.notifyDataSetChanged();
-				swingRightInAnimationAdapter.notifyDataSetChanged();
-			}
-			public void onFailure(Throwable e) {
-				showLoader(false);
-				Log.d(TAG, ">onFailure TimelineTweets: " + e.toString());
-			}
-		});
+	private void loadTweets() {
+
+		if (tweetrAdapter.getCount() > 0) {
+			fetchTimelineAsync(-1, tweetrAdapter.getItem(0).getId() + 1);
+		} else {
+			showLoader(true);
+			TweetrApp.getRestClient().getHomeTimeLineTweets(-1, -1,  new TweetrJsonHttpResponseHandler(mContext, TAG) {
+				@Override
+				public void onSuccess(JSONArray jsonTweets) {
+					Log.d(TAG, ">onSuccess TimelineTweets " + jsonTweets.toString());
+					showLoader(false);
+					tweets = Tweet.fromJson(jsonTweets);
+					tweetrAdapter.addAll(tweets);
+					tweetrAdapter.notifyDataSetChanged();
+					swingRightInAnimationAdapter.notifyDataSetChanged();
+				}
+				public void onFailure(Throwable e) {
+					showLoader(false);
+					Log.d(TAG, ">onFailure TimelineTweets: " + e.toString());
+				}
+			});
+		}
 	}
 
 	private void styleActionBar() {
